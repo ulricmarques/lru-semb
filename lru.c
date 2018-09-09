@@ -2,20 +2,20 @@
 #include<stdlib.h>
 
 int num_paginas,num_frames;
-int referencias[20];
-int paginas[50];
+int referencias[3000];
+int paginas[100];
 int acerto=0;
 int i,j,k;
 int cont_faltas=0;
 
 void gera_referencias(){
 	num_frames = 4;
-	num_paginas = 20;
+	num_paginas = 3000;
 	time_t t;
 	srand((unsigned) time(&t));
 	int i;
-	for(i=0; i<20; i++){
-		referencias[i] = rand() % 10;
+	for(i=0; i<3000; i++){
+		referencias[i] = rand() % 100;
 	}	
 }
 
@@ -122,7 +122,7 @@ void lru(){
 int main(){
     //recebe_dados();
     gera_referencias();
-    mostra_referencias();
+    //mostra_referencias();
     
 	lru();
 }

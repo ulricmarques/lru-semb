@@ -1,27 +1,27 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-int num_paginas,num_frames;
+int num_referencias,num_frames;
 int referencias[3000];
-int paginas[100];
+int paginas[10];
 int acerto=0;
 int i,j,k;
 int cont_faltas=0;
 
 void gera_referencias(){
 	num_frames = 4;
-	num_paginas = 3000;
+	num_referencias = 30;
 	time_t t;
 	srand((unsigned) time(&t));
 	int i;
-	for(i=0; i<3000; i++){
-		referencias[i] = rand() % 100;
+	for(i=0; i<num_referencias; i++){
+		referencias[i] = rand() % 10;
 	}	
 }
 
 void mostra_referencias(){
 	printf("Referencias: ");
-    for (k=0; k<num_paginas; k++){
+    for (k=0; k<num_referencias; k++){
     	printf("%d ",referencias[k]);
     }
     printf("\n");
@@ -29,9 +29,9 @@ void mostra_referencias(){
  
 void recebe_dados(){
     printf("\nDigite a quantidade de referencias:");
-    scanf("%d",&num_paginas);
+    scanf("%d",&num_referencias);
     printf("\nDigite a sequencia de referencias:");
-    for(i=0; i<num_paginas; i++)
+    for(i=0; i<num_referencias; i++)
         scanf("%d",&referencias[i]);
     printf("\nDigite a quantidade de frames:");
     scanf("%d",&num_frames);
@@ -75,14 +75,14 @@ void mostra_paginas(){
 }
  
 void mostra_faltas(){
-    printf("\nQuantidade de faltas: %d", cont_faltas);
+    printf("\nQuantidade de faltas: %d\n", cont_faltas);
 }
  
 void lru(){
     inicializa();
     int menos_recentemente_usados[50];
-    for(i=0; i<num_paginas; i++){
-        //printf("\nPara %d :",referencias[i]);
+    for(i=0; i<num_referencias; i++){
+        printf("\nPara %d :",referencias[i]);
         if(foi_acerto(referencias[i])==0){
             for(j=0; j<num_frames; j++){
                 int pagina_atual=paginas[j];
@@ -110,10 +110,10 @@ void lru(){
             paginas[indice_substituido]=referencias[i];
             cont_faltas++;
  
-            //mostra_paginas();
+            mostra_paginas();
         }
         else{
-            //printf("Acerto!");
+            printf("Acerto!");
         }
     }
     mostra_faltas();
@@ -122,7 +122,7 @@ void lru(){
 int main(){
     //recebe_dados();
     gera_referencias();
-    //mostra_referencias();
+    mostra_referencias();
     
 	lru();
 }

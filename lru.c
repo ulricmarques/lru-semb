@@ -130,8 +130,9 @@ int main(){
     //recebe_dados();
     num_referencias = 3000;
     num_frames = 4;
+
     le_referencias();
-    mostra_referencias();
+    //mostra_referencias();
     
 	least_recently_used();
 }

@@ -61,19 +61,6 @@ int foi_acerto(int referencia){
     return acerto;
 }
  
-int pega_indice_acerto(int referencia){
-    int indice_acerto;
-    for(k = 0; k < num_frames; k++)
-    {
-        if(frames[k] == referencia)
-        {
-            indice_acerto = k;
-            break;
-        }
-    }
-    return indice_acerto;
-}
- 
 void mostra_paginas(){
     for (k =0 ; k < num_frames; k++){
         if(frames[k] != 9999)
@@ -118,9 +105,6 @@ void least_recently_used(){
             cont_faltas++;
  
             //mostra_paginas();
-        }
-        else{
-            //printf("Acerto!");
         }
     }
     mostra_faltas();

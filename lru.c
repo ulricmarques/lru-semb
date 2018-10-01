@@ -1,5 +1,24 @@
-#include<stdio.h>
-#include<stdlib.h>
+/*
+ * Este algoritmo foi implementado como trabalho na cadeira de Sistemas Embarcados
+ * do curso de Engenharia de Computação do Instituto Federal de Educação, Ciência e 
+ * Tecnologia - Campus Fortaleza, ministrada pelo professor Elias Teodoro.
+ *
+ * Resumo: Implementação do algoritmo Least Recently Used(LRU) para substituição
+ * de páginas de memória. O LRU é um algoritmo guloso que se baseia na ideia de que
+ * uma página usada recentemente provavelmente será utilizada novamente. Assim, quando 
+ * ocorrer uma falta de página, a página que deve ser substituída é aquela que foi
+ * referenciada há mais tempo. 
+ * 
+ * 
+ * Autores: Ulric Marques Ferreira e Cláudia Mariana Costa Maia
+*/
+
+
+
+
+
+#include<stdio.h>   //Importação da biblioteca stdio.
+#include<stdlib.h>  //Importação da biblioteca stlib.
 
 /*
     Função:  Lê um arquivo no formato .txt contendo elementos inteiros

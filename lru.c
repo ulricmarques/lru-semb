@@ -118,12 +118,19 @@ void mostra_faltas(int cont_faltas){
     Saída:   Retorna a quantidade de faltas de página ocorridas.
 */
 int lru(int frames[], int num_frames, int num_referencias, int referencias[]){
-    int i,j,k;
-    int ultimo_acesso[50];
-    int cont_faltas = 0;
-    inicializa(frames, num_frames);
+    int i,j,k; /* Variáveis contadoras. */
+    int ultimo_acesso[50]; /* Declaração do vetor de frames, de tamanho máximo 50,
+                              que guardará o último índice... */
+    int cont_faltas = 0;   /* Contador de faltas de página. */
+    inicializa(frames, num_frames); /* Chamada da função para atribuir aos frames
+                                       existentes o valor 9999, simbolizando o
+                                       estado inicial da memória. */
 
     for(i = 0; i < num_referencias; i++){
+        /* Inicializa o contador "i" com o valor 0, e enquanto ele for menor
+           que "num_frames", checa se o valor contido na posição "i" do vetor
+           "referencias" está contido no vetor "frames". Caso não esteja,
+           executa o código contido no if abaixo. Incrementa o contador ao final. */
         if(!foi_acerto(referencias[i], frames, num_frames)){
             for(j = 0; j < num_frames; j++){
                 int frame_atual = frames[j];
@@ -166,7 +173,7 @@ int lru(int frames[], int num_frames, int num_referencias, int referencias[]){
 */
 int main(){
     int referencias[3000]; //Declaração do vetor de referências, de tamanho máximo 3000.
-    int frames[50];        //Declaração do vetor de fraes, de tamanho máximo 50.
+    int frames[50];        //Declaração do vetor de frames, de tamanho máximo 50.
     int cont_faltas;       //Variável que guardará a quantidade de faltas de página.
 
     le_referencias(referencias, 3000); /*Chamada da função para ler um arquivo .txt e

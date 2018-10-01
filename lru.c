@@ -11,21 +11,25 @@
     Saída:   O vetor de referências preenchido.
 */
 void le_referencias(int referencias[], int num_referencias){
-    
-    FILE *file;
-    file = fopen("referencias.txt","r");
-    while(file == NULL){ /* Arquivo não encontrado */
+
+    FILE *file; //Variável que guardará a referência ao arquivo.
+    file = fopen("referencias.txt","r"); //abertura do arquivo.
+    while(file == NULL){ /* Verifica se houve sucesso na abertura do arquivo e,
+                            em caso de falha, tenta abrí-lo novamente. */
             printf("\n\n[!] Arquivo nao localizado, tente novamente.");
             file = fopen("referencias.txt","r");
     }
         
-    int i = 0;
-    while(!feof(file) && i < num_referencias){
-        fscanf(file, "%d", &referencias[i]);
+    int i = 0; //Variável contadora. 
+    while(!feof(file) && i < num_referencias){ 
+        /* Enquanto não chegar ao final do arquivo e o valor atual de "i" 
+           for menor que o limite estabelecido pela variável "num_referencias",
+           lê o próximo valor do arquivo e o atribui ao índice "i" do vetor de
+           referências, incrementando o valor de "i" em seguida. */
+        fscanf(file, "%d", &referencias[i]); 
         i++;
     }
-    fclose(file);
-    
+    fclose(file); //Fecha o arquivo.
 }
 
 
@@ -38,9 +42,13 @@ void le_referencias(int referencias[], int num_referencias){
     Saída:   O vetor de frames preenchido com o valor 9999.
 */
 void inicializa(int frames[], int num_frames){
-    int i;
-    for(i = 0; i < num_frames; i++)
+    int i; //Variável contadora.
+    for(i = 0; i < num_frames; i++){
+        /* Inicializa o contador "i" com o valor 0, e enquanto ele for menor
+           que "num_frames", atribui à posição "i" do vetor "frames" o valor
+           9999, incrementando o contador em seguida. */
         frames[i] = 9999;
+    }
 }
  
 
@@ -54,15 +62,20 @@ void inicializa(int frames[], int num_frames){
              acerto.
 */
 int foi_acerto(int referencia, int frames[], int num_frames){
-    int i;
-    int acerto = 0;
+    int i; //Variável contadora.
+    int acerto = 0; /*Variável que representa se houve acerto ou falta,
+                      inicializada com 0 (falta). */
     for(i = 0; i < num_frames; i++){
+        /* Inicializa o contador "i" com o valor 0, e enquanto ele for menor
+           que "num_frames", checa se a posição "i" do vetor "frames" contém
+           o valor "referencia". Caso contenha, atribui valor 1 à variável
+           contadora e sai do laço. Incrementando o contador ao final. */
         if(frames[i] == referencia){
             acerto = 1;
             break;
         }
     }
-    return acerto;
+    return acerto; //Retorna o valor da varíavel "acerto".
 }
 
 /*
@@ -72,7 +85,8 @@ int foi_acerto(int referencia, int frames[], int num_frames){
     Saída:   Exibe no terminal a quantidade de faltas.
 */
 void mostra_faltas(int cont_faltas){
-    printf("\nQuantidade de faltas: %d\n", cont_faltas);
+    printf("\nQuantidade de faltas: %d\n", cont_faltas); 
+    /* Exibe no terminal o valor da variável "cont_faltas". */
 }
 
 
@@ -132,12 +146,18 @@ int lru(int frames[], int num_frames, int num_referencias, int referencias[]){
              é exibida no terminal.
 */
 int main(){
-    int referencias[3000];
-    int frames[50];
-    int cont_faltas;
+    int referencias[3000]; //Declaração do vetor de referências, de tamanho máximo 3000.
+    int frames[50];        //Declaração do vetor de fraes, de tamanho máximo 50.
+    int cont_faltas;       //Variável que guardará a quantidade de faltas de página.
 
-    le_referencias(referencias, 3000);
-	cont_faltas = lru(frames, 4, 3000, referencias);
+    le_referencias(referencias, 3000); /*Chamada da função para ler um arquivo .txt e
+                                         guardar os valores contidos nele no vetor de
+                                         referências. */
 
-    mostra_faltas(cont_faltas);
+	cont_faltas = lru(frames, 4, 3000, referencias); /* Chamada da função de simulação, 
+                                                        armazenando seu resultado na variável
+                                                        "cont_faltas". */
+
+    mostra_faltas(cont_faltas); /* Chamada da função para exibir no terminal
+                                   a quantidade de faltas ocorridas. */
 }

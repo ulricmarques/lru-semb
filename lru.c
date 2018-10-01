@@ -1,7 +1,17 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-void le_referencias(int referencias[]){
+/*
+    Função:  Lê um arquivo no formato .txt contendo elementos inteiros
+             que representam acessos a páginas de memória, e guarda esses valores
+             em um vetor "referencias" passado como parâmetro, até a quantidade
+             limite representada por "num_referencias".   
+    Entrada: Um vetor representando as referências e a quantidade limite 
+             de valores a serem lidos.       
+    Saída:   O vetor de referências preenchido.
+*/
+void le_referencias(int referencias[], int num_referencias){
+    
     FILE *file;
     file = fopen("referencias.txt","r");
     while(file == NULL){ /* Arquivo não encontrado */
@@ -10,7 +20,7 @@ void le_referencias(int referencias[]){
     }
         
     int i = 0;
-    while(!feof(file)){
+    while(!feof(file) && i < num_referencias){
         fscanf(file, "%d", &referencias[i]);
         i++;
     }
@@ -18,12 +28,31 @@ void le_referencias(int referencias[]){
     
 }
 
+
+/*
+    Função:  Preenche as posições do vetor de frames com o valor
+             9999, representando o estado inicial onde não há
+             nenhuma página alocada na memória.
+    Entrada: Um vetor representando os frames e a quantidade de
+             frames existentes.
+    Saída:   O vetor de frames preenchido com o valor 9999.
+*/
 void inicializa(int frames[], int num_frames){
     int i;
     for(i = 0; i < num_frames; i++)
         frames[i] = 9999;
 }
  
+
+/*
+    Função:  Verifica se uma determinada paǵina está alocada em algum 
+             frame. Em caso positivo, ocorreu um acerto. Já em caso
+             negativo, houve uma falta de página.
+    Entrada: Um inteiro representando a página referenciada, um vetor
+             representando os frames e a quantidade de frames existentes.
+    Saída:   Retorna valor 0 em caso de falta de página ou valor 1 em caso de
+             acerto.
+*/
 int foi_acerto(int referencia, int frames[], int num_frames){
     int i;
     int acerto = 0;
@@ -36,22 +65,29 @@ int foi_acerto(int referencia, int frames[], int num_frames){
     return acerto;
 }
 
-void mostra_paginas(int frames[], int num_frames){
-    int i;
-    for (i = 0 ; i < num_frames; i++){
-        if(frames[i] != 9999)
-            printf("%d ", frames[i]);
-    }
-}
- 
+/*
+    Função:  Exibe a quantidade de faltas de página ocorridas após a execução
+             do algoritmo.
+    Entrada: Um inteiro representando a quantidade de faltas ocorridas.
+    Saída:   Exibe no terminal a quantidade de faltas.
+*/
 void mostra_faltas(int cont_faltas){
     printf("\nQuantidade de faltas: %d\n", cont_faltas);
 }
- 
-int lru(int frames[], int num_frames, int num_referencias, int referencias[],  int cont_faltas){
+
+
+/*
+    Função:  Simula a substituição de páginas de memória utilizando o algoritmo
+             Least Recently Used.
+    Entrada: Um vetor representando os frames, a quantidade de frames existentes,
+             a quantidade de referências que serão analisadase  um vetor contendo
+             as referências (onde cada página é representada por um inteiro).
+    Saída:   Retorna a quantidade de faltas de página ocorridas.
+*/
+int lru(int frames[], int num_frames, int num_referencias, int referencias[]){
     int i,j,k;
     int ultimo_acesso[50];
-
+    int cont_faltas = 0;
     inicializa(frames, num_frames);
 
     for(i = 0; i < num_referencias; i++){
@@ -88,13 +124,20 @@ int lru(int frames[], int num_frames, int num_referencias, int referencias[],  i
     return cont_faltas;
 }
 
+/*
+    Função:  Ponto de entrada. Declara e inicializa as variáveis necessárias,
+             executando o algoritmo uma única vez. 
+    Entrada: Nada.
+    Saída:   Ao final da execução, a quantidade de faltas de página ocorridas
+             é exibida no terminal.
+*/
 int main(){
     int referencias[3000];
     int frames[50];
     int cont_faltas;
 
-    le_referencias(referencias);
-	cont_faltas = lru(frames, 4, 3000, referencias, 0);
+    le_referencias(referencias, 3000);
+	cont_faltas = lru(frames, 4, 3000, referencias);
 
     mostra_faltas(cont_faltas);
 }

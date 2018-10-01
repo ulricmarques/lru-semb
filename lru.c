@@ -113,7 +113,7 @@ void mostra_faltas(int cont_faltas){
     Fun√ß√£o:  Simula a substitui√ß√£o de p√°ginas de mem√≥ria utilizando o algoritmo
              Least Recently Used.
     Entrada: Um vetor representando os frames, a quantidade de frames existentes,
-             a quantidade de refer√™ncias que ser√£o analisadase  um vetor contendo
+             a quantidade de refer√™ncias que ser√£o analisadas e  um vetor contendo
              as refer√™ncias (onde cada p√°gina √© representada por um inteiro).
     Sa√≠da:   Retorna a quantidade de faltas de p√°gina ocorridas.
 */
@@ -133,35 +133,48 @@ int lru(int frames[], int num_frames, int num_referencias, int referencias[]){
            executa o c√≥digo contido no if abaixo. Incrementa o contador ao final. */
         if(!foi_acerto(referencias[i], frames, num_frames)){
             for(j = 0; j < num_frames; j++){
-                int frame_atual = frames[j];
-                int achou = 0;
-                for(k = i-1; k >= 0; k--){
+                int frame_atual = frames[j];/* Declara uma vari·vel auxiliar que guarda o
+											valor contido numa posiÁ„o do vetor de frames */
+                int achou = 0; 				/* Vari√°vel que representa se a p·gina foi encontrada no vetor de referÍncias,
+                      						inicializada com 0 (n„o encontrada). */
+                for(k = i-1; k >= 0; k--){  /* Inicializa o contador "k" com o valor da referÍncia anterior a atual, e enquanto ele for maior
+           									ou igual a 0, checa se a posi√ß√£o "k" do vetor "referencias" cont√©m
+           									o valor "frame_atual". Caso contenha, atribui valor "k" √† posiÁ„o "j" do vetor
+											"ultimo_acesso" e valor 1 a vari·vel "achou", saindo do laÁo em seguida.
+											Decrementando o contador ao final. */
                     if(frame_atual == referencias[k]){
                         ultimo_acesso[j] = k;
                         achou = 1;
                         break;
                     }
-                    else
-                        achou = 0;
-                }
-                if(!achou)
+            	}
+                if(!achou)  /* Caso a vari·vel "achou" tenha valor 0, atribui o
+							valor -9999 na posiÁ„o "j" do vetor "ultimo_acesso".*/
                     ultimo_acesso[j] = -9999;
             }
 
-            int menor = 9999;
-            int indice_substituido;
-            for(j = 0; j < num_frames; j++){
+            int menor = 9999;	/* Declara uma vari·vel que guardar· o menor Ìndice do vetor de "referencias"
+								que contenha a p·gina menos recente do vetor de frames*/
+            int indice_substituido; /* Declara uma vari·vel que guardar· o Ìndice da p·gina
+									menos recentemente usada, ou seja, aquela que ser· substituÌda*/
+            for(j = 0; j < num_frames; j++){/* Inicializa o contador "j" com o valor 0, e enquanto ele for menor
+           									que "num_frames", checa se a posi√ß√£o "j" do vetor "ultimo_acesso" cont√©m
+           									um valor menor que o da vari·vel "menor". Caso contenha, o valor da vari·vel "menor"
+											se torna o valor contido na posiÁ„o "j" do vetor "ultimo_acesso" e a vari·vel
+											"indice_substituido" recebe o valor "j".
+											Incrementando o contador ao final. */
                 if(ultimo_acesso[j] < menor){
                     menor = ultimo_acesso[j];
                     indice_substituido = j;
                 }
             }
 
-            frames[indice_substituido] = referencias[i];
-            cont_faltas++;
+            frames[indice_substituido] = referencias[i];/* Substitui o a p·gina contida no vetor frame na posiÁ„o "indice_substituido"
+														pela referÍncia atual.*/
+            cont_faltas++; /*Incremanta contador de faltas. */
         }
     }
-    return cont_faltas;
+    return cont_faltas; /* Retorna a quantidade de faltas de p·gina ocorridas */
 }
 
 /*

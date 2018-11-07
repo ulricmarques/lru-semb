@@ -47,26 +47,28 @@
 #include <xc.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "referencias.h"
 
 #define _XTAL_FREQ 32000000
 #define F_CPU 32000000/64//#define Baud_value(baud_rate) (((float)(F_CPU)/(float)baud_rate)-1)
 #define Baud_value (((float)(F_CPU)/(float)baud_rate)-1)//calculo do taxa de transmissão serial para Uart
 
 int num_referencias,num_frames;
-char referencias[900];
-char frames[4];
+//char referencias[900];
+int frames[4];
 int acerto=0;
 int i,j,k;
 int cont_faltas=0;
 
+/*
 void gera_referencias(){
 	num_frames = 4;
-	num_referencias = 900;
+	num_referencias = 3000;
 	int i;
 	for(i=0; i<num_referencias; i++){
 		referencias[i] = i;
 	}	
-}
+}*/
 
  
 void inicializa(){
@@ -141,7 +143,6 @@ int main(void) {
     
     while (1) {
        
-        gera_referencias();
         cont_faltas = lru(); /* Chamada da fun??o de simula??o, 
                                                         armazenando seu resultado na vari?vel
                                                         "cont_faltas". */

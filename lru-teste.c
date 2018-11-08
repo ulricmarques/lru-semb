@@ -1,31 +1,14 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include "./referencias.h"
 
-int num_referencias, num_frames;
-int referencias[3000];
-int frames[50];
+int num_referencias = 3000;
+int num_frames = 4;
+//int referencias[3000];
+int frames[4];
 int acerto = 0;
 int i, j, k;
 int cont_faltas = 0;
-
-
-void le_referencias(){
-    FILE *file;
-    file = fopen("referencias.txt","r");
-    if(file == NULL){ /* Arquivo não encontrado */
-            printf("\n\n[!] Arquivo nao localizado");
-            return;
-    }
-    else{
-        int i = 0;
-        while(!feof(file)){
-            fscanf(file, "%d", &referencias[i]);
-            i++;
-
-        }
-        fclose(file);
-    }
-}
 
 void mostra_referencias(){
 	printf("Referencias: ");
@@ -33,16 +16,6 @@ void mostra_referencias(){
     	printf("%d ", referencias[k]);
     }
     printf("\n");
-}
- 
-void recebe_dados(){
-    printf("\nDigite a quantidade de referencias:");
-    scanf("%d", &num_referencias);
-    printf("\nDigite a sequencia de referencias:");
-    for(i = 0; i < num_referencias; i++)
-        scanf("%d", &referencias[i]);
-    printf("\nDigite a quantidade de frames:");
-    scanf("%d", &num_frames);
 }
 
 void inicializa(){
@@ -75,7 +48,7 @@ void mostra_faltas(){
  
 void least_recently_used(){
     inicializa();
-    int lru[50];
+    int lru[4];
     for(i = 0; i < num_referencias; i++){
         //printf("\nPara %d :",referencias[i]);
         if(foi_acerto(referencias[i]) == 0){
@@ -112,8 +85,6 @@ void least_recently_used(){
 }
 
 int main(){
-    recebe_dados();
-    //le_referencias();
     mostra_referencias();
     least_recently_used();
 }

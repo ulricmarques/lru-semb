@@ -60,17 +60,6 @@ int acerto=0;
 int i,j,k;
 int cont_faltas=0;
 
-/*
-void gera_referencias(){
-	num_frames = 4;
-	num_referencias = 3000;
-	int i;
-	for(i=0; i<num_referencias; i++){
-		referencias[i] = i;
-	}	
-}*/
-
- 
 void inicializa(){
     cont_faltas=0;
     for(i=0; i<num_frames; i++)
@@ -89,8 +78,6 @@ int foi_acerto(int referencia){
 }
  
 
-
- 
 int lru(){
     inicializa();
     int menos_recentemente_usados[4];

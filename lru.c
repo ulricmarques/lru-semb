@@ -50,6 +50,7 @@ void le_referencias(int referencias[], int num_referencias){
         i++;
     }
     fclose(file); //Fecha o arquivo.
+
 }
 
 

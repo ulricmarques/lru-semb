@@ -41,6 +41,10 @@
 #pragma config CP = OFF         // UserNVM Program memory code protection bit (Program Memory code protection disabled)
 #pragma config CPD = OFF        // DataNVM code protection bit (Data EEPROM code protection disabled)
 
+// CONFIG
+
+#pragma config PWRTE = OFF      // Power-up Timer Enable bit (PWRT disabled)
+
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 
@@ -48,17 +52,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "referencias.h"
+//#include "usart.h"
 
 #define _XTAL_FREQ 32000000
 #define F_CPU 32000000/64//#define Baud_value(baud_rate) (((float)(F_CPU)/(float)baud_rate)-1)
 #define Baud_value (((float)(F_CPU)/(float)baud_rate)-1)//calculo do taxa de transmissão serial para Uart
 
-int num_referencias,num_frames;
+int num_referencias = 3000;
+int num_frames = 4;
 //char referencias[900];
 int frames[4];
 int acerto=0;
 int i,j,k;
-int cont_faltas=0;
+int cont_faltas=5;
 
 void inicializa(){
     cont_faltas=0;
@@ -116,7 +122,19 @@ int lru(){
             //printf("Acerto!");
         }
     }
+    
     return cont_faltas;
+}
+
+void putch(unsigned char data) {
+    while( !TXIF)          // wait until the transmitter is ready
+        continue;
+    TXREG = data;                     // send one character
+}
+
+void init_uart(void) {
+    TXSTAbits.TXEN = 1;               // enable transmitter
+    RCSTAbits.SPEN = 1;               // enable serial port
 }
 
 int main(void) {
@@ -127,7 +145,7 @@ int main(void) {
 //    LATAbits.LATA6 = 1;            
 //    LATAbits.LATA7 = 0;
 //    while (1);
-    
+        init_uart();
     while (1) {
        
         cont_faltas = lru(); /* Chamada da fun??o de simula??o, 
@@ -140,13 +158,10 @@ int main(void) {
        LATAbits.LATA6 = 1;            
        LATAbits.LATA7 = 1;
        __delay_ms(500);
-       LATAbits.LATA4 = 1;
-       LATAbits.LATA5 = 0;
-       LATAbits.LATA6 = 0;            
-       LATAbits.LATA7 = 1;
-       __delay_ms(500);
-    
       
+    
+       
+       printf("\rFaltas: %d\n", cont_faltas);
     }
     
 

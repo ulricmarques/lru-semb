@@ -1,8 +1,8 @@
 /* 
  * File:   main.c
- * Author: elias
+ * Authors: Ulric Marques e Cláudia Mariana
  *
- * Created on October 19, 2018, 3:48 PM
+ * Criado em 14 de Novembro, 2018, 16:20
  */
 
 // Production -> Set Configuration Bits;

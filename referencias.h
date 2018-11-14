@@ -1,23 +1,12 @@
 /* 
- * File:   referencias.h
- * Author: Aluno
+ * File:   lru.c
+ * Authors: Ulric Marques e Cláudia Mariana
  *
- * Created on 7 de Novembro de 2018, 17:43
+ * Criado em 14 de Novembro, 2018, 16:20
  */
 
 #ifndef REFERENCIAS_H
 #define	REFERENCIAS_H
-
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-
-
-
-#ifdef	__cplusplus
-}
-#endif
 
 #endif	/* REFERENCIAS_H */
 

@@ -1,6 +1,6 @@
 /* 
- * Arquivo:   main.c
- * Autores: Ulric Marques e Cláudia Mariana
+ * File:   main.c
+ * Authors: Ulric Marques e Cláudia Mariana
  *
  * Criado em 14 de Novembro, 2018, 16:20
  */
@@ -70,7 +70,10 @@
  * referenciada há mais tempo. 
  * 
  * 
- 
+ * Autores: Ulric Marques Ferreira e Cláudia Mariana Costa Maia
+ * 
+ *  Copyright (C) 2018 Cláudia Mariana <claudiamarianacmaia@gmail.com>
+ *  Copyright (C) 2018 Ulric Marques  <ulricmf@gmail.com>
 */
 
 

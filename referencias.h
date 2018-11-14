@@ -1,16 +1,31 @@
 /* 
- * File:   lru.c
- * Authors: Ulric Marques e Cláudia Mariana
+ * Arquivo:   lru.c
+ * Autores: Ulric Marques e Cláudia Mariana
  *
  * Criado em 14 de Novembro, 2018, 16:20
- */
-
+ *
+ *  Copyright (C) 2018 Cláudia Mariana <claudiamarianacmaia@gmail.com>
+ *  Copyright (C) 2018 Ulric Marques  <ulricmf@gmail.com>
+ *
+ * Este arquivo armazena o vetor de referências escolhido para ser utilizado no
+ * algoritmo LRU. Os elementos do vetor existente neste arquivo são utilizados 
+ * para calcular o número de faltas no algoritmo da aplicação. Os valores 
+ * definidos simulam uma lista de referências à páginas de memória, produzidos
+ * aleatoriamente com valores entre 0 e 19, e testado na plataforma Practice do
+ * site GeeksforGeeks <practice.geeksforgeeks.org/problems/page-faults-in-lru/0>
+ * para contraprova do resultado calculado pela aplicação.
+ *  
+ */ 
 #ifndef REFERENCIAS_H
 #define	REFERENCIAS_H
 
 #endif	/* REFERENCIAS_H */
 
-const int referencias[3000] = {
+#define TAMANHO 3000      //Definição do tamanho máximo do vetor de referências
+
+const int referencias[TAMANHO] = { /*Declaração e atribuição do vetor de
+                                     referências contendo 3000 elementos
+                                     inteiros com valores entre 0 e 19*/
     2, 19, 14, 17, 19, 0, 0, 7, 9, 4, 3, 8, 3, 16, 7, 13, 9, 4, 9, 5, 16,
     8, 10, 0, 14, 4, 19, 3, 1, 10, 14, 16, 1, 9, 5, 0, 1, 6, 19, 10, 2,
     2, 18, 5, 19, 17, 18, 0, 2, 19, 5, 10, 0, 7, 10, 14, 11, 2, 9, 4, 4,

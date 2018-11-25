@@ -13,6 +13,9 @@
  * IDE :  MPLABX (Microchip)
  * Autores: Ulric Marques e Cláudia Mariana
  *
+ * Adaptado de www.programming9.com, com código original disponível em:
+ * <www.programming9.com/programs/c-programs/285-page-replacement-programs-in-c>.
+ * 
  * Criado em 14 de Novembro, 2018, 16:20
  * 
  *  Copyright (C) 2018 Cláudia Mariana <claudiamarianacmaia@gmail.com>

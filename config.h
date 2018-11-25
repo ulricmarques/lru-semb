@@ -1,5 +1,5 @@
 /* 
- * Arquivo: config.c
+ * Arquivo: config.h
  * 
  * Plataforma Alvo : PIC16F18875 (Microchip)
  * Compilador : XC8 (Microchip)

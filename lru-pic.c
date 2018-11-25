@@ -1,64 +1,37 @@
 /* 
- * File:   main.c
- * Authors: Ulric Marques e Cláudia Mariana
+ * Arquivo: main.c
+ * 
+ * Entrada: Um vetor de inteiros representando uma lista de referências
+ *          de memória, na formatação definida no arquivo "referencias.h".
+ *   
+ * Saída:   A quantidade de faltas de página ocorridas após a aplicação do
+ *          algoritmo Least Recently Used(LRU) sobre a lista de referências
+ *          de memória recebida.
+ *  
+ * Plataforma Alvo : PIC16F18875 (Microchip)
+ * Compilador : XC8 (Microchip)
+ * IDE :  MPLABX (Microchip)
+ * Autores: Ulric Marques e Cláudia Mariana
  *
  * Criado em 14 de Novembro, 2018, 16:20
- */
-
-// Production -> Set Configuration Bits;
-// PIC16F18875 Configuration Bit Settings
-// 'C' source line config statements
-
-// CONFIG1
-#pragma config FEXTOSC = OFF    // External Oscillator mode selection bits (Oscillator not enabled)
-#pragma config RSTOSC = HFINT32 // Power-up default value for COSC bits (HFINTOSC with OSCFRQ= 32 MHz and CDIV = 1:1)
-#pragma config CLKOUTEN = OFF   // Clock Out Enable bit (CLKOUT function is disabled; i/o or oscillator function on OSC2)
-#pragma config CSWEN = ON       // Clock Switch Enable bit (Writing to NOSC and NDIV is allowed)
-#pragma config FCMEN = ON       // Fail-Safe Clock Monitor Enable bit (FSCM timer enabled)
-
-// CONFIG2
-#pragma config MCLRE = ON       // Master Clear Enable bit (MCLR pin is Master Clear function)
-#pragma config PWRTE = OFF      // Power-up Timer Enable bit (PWRT disabled)
-#pragma config LPBOREN = OFF    // Low-Power BOR enable bit (ULPBOR disabled)
-#pragma config BOREN = ON       // Brown-out reset enable bits (Brown-out Reset Enabled, SBOREN bit is ignored)
-#pragma config BORV = LO        // Brown-out Reset Voltage Selection (Brown-out Reset Voltage (VBOR) set to 1.9V on LF, and 2.45V on F Devices)
-#pragma config ZCD = OFF        // Zero-cross detect disable (Zero-cross detect circuit is disabled at POR.)
-#pragma config PPS1WAY = ON     // Peripheral Pin Select one-way control (The PPSLOCK bit can be cleared and set only once in software)
-#pragma config STVREN = ON      // Stack Overflow/Underflow Reset Enable bit (Stack Overflow or Underflow will cause a reset)
-
-// CONFIG3
-#pragma config WDTCPS = WDTCPS_31// WDT Period Select bits (Divider ratio 1:65536; software control of WDTPS)
-#pragma config WDTE = OFF       // WDT operating mode (WDT Disabled, SWDTEN is ignored)
-#pragma config WDTCWS = WDTCWS_7// WDT Window Select bits (window always open (100%); software control; keyed access not required)
-#pragma config WDTCCS = SC      // WDT input clock selector (Software Control)
-
-// CONFIG4
-#pragma config WRT = OFF        // UserNVM self-write protection bits (Write protection off)
-#pragma config SCANE = available// Scanner Enable bit (Scanner module is available for use)
-#pragma config LVP = ON         // Low Voltage Programming Enable bit (Low Voltage programming enabled. MCLR/Vpp pin function is MCLR.)
-
-// CONFIG5
-#pragma config CP = OFF         // UserNVM Program memory code protection bit (Program Memory code protection disabled)
-#pragma config CPD = OFF        // DataNVM code protection bit (Data EEPROM code protection disabled)
-
-// CONFIG
-
-#pragma config PWRTE = OFF      // Power-up Timer Enable bit (PWRT disabled)
-
-// #pragma config statements should precede project file includes.
-// Use project enums instead of #define for ON and OFF.
-
-#include <xc.h>              //Importação da biblioteca do compilador XC8.
-#include<stdio.h>            //Importação da biblioteca stdio.
-#include<stdlib.h>           //Importação da biblioteca stlib.
-#include "referencias.h"     //Importação do header que contém o vetor com as referências.
-
-
-#define _XTAL_FREQ 32000000
-#define F_CPU 32000000/64//#define Baud_value(baud_rate) (((float)(F_CPU)/(float)baud_rate)-1)
-#define Baud_value (((float)(F_CPU)/(float)baud_rate)-1)//cálculo do taxa de transmissão serial para Uart
-
-/*
+ * 
+ *  Copyright (C) 2018 Cláudia Mariana <claudiamarianacmaia@gmail.com>
+ *  Copyright (C) 2018 Ulric Marques  <ulricmf@gmail.com>
+ * 
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * 
  * Este algoritmo foi implementado como trabalho na cadeira de Sistemas Embarcados
  * do curso de Engenharia de Computação do Instituto Federal de Educação, Ciência e 
  * Tecnologia - Campus Fortaleza, ministrada pelo professor Elias Teodoro.
@@ -67,25 +40,34 @@
  * de páginas de memória. O LRU é um algoritmo guloso que se baseia na ideia de que
  * uma página usada recentemente provavelmente será utilizada novamente. Assim, quando 
  * ocorrer uma falta de página, a página que deve ser substituída é aquela que foi
- * referenciada há mais tempo. 
+ * referenciada há mais tempo.
+ *  
+ * Modo de uso: Para uso do algoritmo altere o valor do parâmetro "num_frames" da função 
+ *              "lru" de acordo com a quantidade de frames desejada(entre 1 e 12).
+ *              Caso deseje alterar a lista das referências de memória, modifique os valores
+ *              do vetor "referencias" no arquivo "referencias.h", e altere o parâmetro
+ *              "num_referencias" da função "lru" de acordo com a quantidade de elementos
+ *              da lista. 
  * 
- * 
- * Autores: Ulric Marques Ferreira e Cláudia Mariana Costa Maia
- * 
- *  Copyright (C) 2018 Cláudia Mariana <claudiamarianacmaia@gmail.com>
- *  Copyright (C) 2018 Ulric Marques  <ulricmf@gmail.com>
 */
 
+#include <xc.h>              //Importação da biblioteca do compilador XC8.
+#include<stdio.h>            //Importação da biblioteca stdio.
+#include<stdlib.h>           //Importação da biblioteca stlib.
+#include "referencias.h"     //Importação do header que contém o vetor com as referências.
+#include "config.h"          /*Importação do header que contém as configurações dos 
+                                registradores do PIC 16F18875. */
 
-/*
+void inicializa(int frames[], int num_frames){
+    /*
     Função:  Preenche as posições do vetor de frames com o valor
              9999, representando o estado inicial onde não há
              nenhuma página alocada na memória.
     Entrada: Um vetor representando os frames e a quantidade de
              frames existentes.
     Saída:   O vetor de frames preenchido com o valor 9999.
-*/
-void inicializa(int frames[], int num_frames){
+    */
+    
     int i; //Variável contadora.
     for(i = 0; i < num_frames; i++){
         /* Inicializa o contador "i" com o valor 0, e enquanto ele for menor
@@ -94,9 +76,9 @@ void inicializa(int frames[], int num_frames){
         frames[i] = 9999;
     }
 }
- 
 
-/*
+int foi_acerto(int referencia, int frames[], int num_frames){
+    /*
     Função:  Verifica se uma determinada página está alocada em algum 
              frame. Em caso positivo, ocorreu um acerto. Já em caso
              negativo, houve uma falta de página.
@@ -104,8 +86,8 @@ void inicializa(int frames[], int num_frames){
              representando os frames e a quantidade de frames existentes.
     Saída:   Retorna valor 0 em caso de falta de página ou valor 1 em caso de
              acerto.
-*/
-int foi_acerto(int referencia, int frames[], int num_frames){
+    */
+    
     int i; //Variável contadora.
     int acerto = 0; /*Variável que representa se houve acerto ou falta,
                       inicializada com 0 (falta). */
@@ -122,26 +104,16 @@ int foi_acerto(int referencia, int frames[], int num_frames){
     return acerto; //Retorna o valor da variável "acerto".
 }
 
-/*
-    Função:  Exibe a quantidade de faltas de página ocorridas após a execução
-             do algoritmo.
-    Entrada: Um inteiro representando a quantidade de faltas ocorridas.
-    Saída:   Exibe no terminal a quantidade de faltas.
-*/
-void mostra_faltas(int cont_faltas){
-    printf("\nQuantidade de faltas: %d\n", cont_faltas); 
-    /* Exibe no terminal o valor da variável "cont_faltas". */
-}
-
-/*
+int lru(int frames[], int num_frames, int num_referencias, int referencias[]){
+    /*
     Função:  Simula a substituição de páginas de memória utilizando o algoritmo
              Least Recently Used.
     Entrada: Um vetor representando os frames, a quantidade de frames existentes,
              a quantidade de referências que serão analisadas e  um vetor contendo
              as referências (onde cada página é representada por um inteiro).
     Saída:   Retorna a quantidade de faltas de página ocorridas.
-*/
-int lru(int frames[], int num_frames, int num_referencias, int referencias[]){
+    */
+    
     int i,j,k; /* Variáveis contadoras. */
     int ultimo_acesso[12]; /* Declaração do vetor de frames, de tamanho máximo 12,
                               que guardará o último índice... */
@@ -213,11 +185,27 @@ int main(void){
 
     while(1){
         int frames[12];        //Declaração do vetor de frames, de tamanho máximo 12.
-        int cont_faltas;       //Variável que guardará a quantidade de faltas de página.
+        int cont_faltas_4;     /* Variável que guardará a quantidade de faltas de página
+                                ocorridas com 4 frames disponíveis. */
+        int cont_faltas_8;     /* Variável que guardará a quantidade de faltas de página
+                                ocorridas com 8 frames disponíveis. */
+        int cont_faltas_12;    /* Variável que guardará a quantidade de faltas de página
+                                ocorridas com 12 frames disponíveis. */
 
-        cont_faltas = lru(frames, 4, 3000, referencias); /* Chamada da função de simulação, 
+        cont_faltas_4 = lru(frames, 4, 3000, referencias);  /* Chamada da função de simulação
+                                                        com parâmetro "num_frames" igual a 4, 
                                                         armazenando seu resultado na variável
-                                                        "cont_faltas". */
+                                                        "cont_faltas_4". */
+        
+        cont_faltas_8 = lru(frames, 8, 3000, referencias);  /* Chamada da função de simulação
+                                                        com parâmetro "num_frames" igual a 8, 
+                                                        armazenando seu resultado na variável
+                                                        "cont_faltas_8". */
+        
+        cont_faltas_12 = lru(frames, 12, 3000, referencias); /* Chamada da função de simulação
+                                                        com parâmetro "num_frames" igual a 12, 
+                                                        armazenando seu resultado na variável
+                                                        "cont_faltas_12". */
          
     }
     

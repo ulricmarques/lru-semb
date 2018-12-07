@@ -76,7 +76,7 @@ void inicializa(signed char frames[], signed char num_frames){
         /* Inicializa o contador "i" com o valor 0, e enquanto ele for menor
            que "num_frames", atribui à posição "i" do vetor "frames" o valor
            9999, incrementando o contador em seguida. */
-        frames[i] = 99;
+        frames[i] = -1;
     }
 }
 
@@ -107,6 +107,18 @@ int foi_acerto(signed char referencia, signed char frames[], signed char num_fra
     return acerto; //Retorna o valor da variável "acerto".
 }
 
+int procuraLRU(int ultimo_acesso[], signed char num_frames){
+    int menor = ultimo_acesso[0], pos = 0;
+    signed char i;
+    for(i = 1; i < num_frames; i++){
+        if(ultimo_acesso[i] < menor){
+            menor = ultimo_acesso[i];
+            pos = i;
+        }
+    }
+    return pos;
+}
+
 int lru(signed char frames[], signed char num_frames, int num_referencias, signed char referencias[]){
     /*
     Função:  Simula a substituição de páginas de memória utilizando o algoritmo
@@ -117,7 +129,7 @@ int lru(signed char frames[], signed char num_frames, int num_referencias, signe
     Saída:   Retorna a quantidade de faltas de página ocorridas.
     */
     
-    int i,j,k; /* Variáveis contadoras. */
+    int i,j; /* Variáveis contadoras. */
     int ultimo_acesso[12]; /* Declaração do vetor de frames, de tamanho máximo 12,
                               que guardará o último índice... */
     int cont_faltas = 0;   /* Contador de faltas de página. */
@@ -125,52 +137,44 @@ int lru(signed char frames[], signed char num_frames, int num_referencias, signe
                                        existentes o valor 9999, simbolizando o
                                        estado inicial da memória. */
 
+    int contador = 0, pos;
+    signed char flag1, flag2;
     for(i = 0; i < num_referencias; i++){
         /* Inicializa o contador "i" com o valor 0, e enquanto ele for menor
            que "num_frames", checa se o valor contido na posição "i" do vetor
            "referencias" está contido no vetor "frames". Caso não esteja,
            executa o código contido no if abaixo. Incrementa o contador ao final. */
-        if(!foi_acerto(referencias[i], frames, num_frames)){
+        
+        flag1 = flag2 = 0;
+        
+        for(j = 0; j < num_frames; j++){
+            if(frames[j] == referencias[i]){
+                contador++;
+                ultimo_acesso[j] = contador;
+                flag1 = flag2 = 1;
+                break;
+            }
+        }
+        
+        if(flag1 == 0){
             for(j = 0; j < num_frames; j++){
-                signed char frame_atual = frames[j];/* Declara uma variável auxiliar que guarda o
-											valor contido numa posição do vetor de frames */
-                signed char achou = 0; 				/* Variável que representa se a página foi encontrada no vetor de referências,
-                      						inicializada com 0 (não encontrada). */
-                for(k = i-1; k >= 0; k--){  /* Inicializa o contador "k" com o valor da referência anterior a atual, e enquanto ele for maior
-           									ou igual a 0, checa se a posição "k" do vetor "referencias" contém
-           									o valor "frame_atual". Caso contenha, atribui valor "k" à posição "j" do vetor
-											"ultimo_acesso" e valor 1 a variável "achou", saindo do laço em seguida.
-											Decrementando o contador ao final. */
-                    if(frame_atual == referencias[k]){
-                        ultimo_acesso[j] = k;
-                        achou = 1;
-                        break;
-                    }
-            	}
-                if(!achou)  /* Caso a variável "achou" tenha valor 0, atribui o
-							valor -9999 na posição "j" do vetor "ultimo_acesso".*/
-                    ultimo_acesso[j] = -99;
-            }
-
-            int menor = 9999;	/* Declara uma variável que guardará o menor índice do vetor de "referencias"
-								que contenha a página menos recente do vetor de frames*/
-            int indice_substituido; /* Declara uma variável que guardará o índice da página
-									menos recentemente usada, ou seja, aquela que será substituída*/
-            for(j = 0; j < num_frames; j++){/* Inicializa o contador "j" com o valor 0, e enquanto ele for menor
-           									que "num_frames", checa se a posição "j" do vetor "ultimo_acesso" contém
-           									um valor menor que o da variável "menor". Caso contenha, o valor da variável "menor"
-											se torna o valor contido na posição "j" do vetor "ultimo_acesso" e a variável
-											"índice_substituido" recebe o valor "j".
-											Incrementando o contador ao final. */
-                if(ultimo_acesso[j] < menor){
-                    menor = ultimo_acesso[j];
-                    indice_substituido = j;
+                if(frames[j] == -1){
+                    contador++;
+                    cont_faltas++;
+                    frames[j] = referencias[i];
+                    ultimo_acesso[j] = contador;
+                    flag2 = 1;
+                    break;
                 }
-            }
-
-            frames[indice_substituido] = referencias[i];/* Substitui a página contida no vetor "frames" na posição "indice_substituido"
-														pela referência atual.*/
-            cont_faltas++; /*Incrementa contador de faltas. */
+            }   
+        }
+        
+        if(flag2 == 0){
+            pos = procuraLRU(ultimo_acesso, num_frames);
+            contador++;
+            cont_faltas++;
+            frames[pos] = referencias[i];
+            ultimo_acesso[pos] = contador;
         }
     }
     return cont_faltas; /* Retorna a quantidade de faltas de página ocorridas */
@@ -185,19 +189,29 @@ int lru(signed char frames[], signed char num_frames, int num_referencias, signe
 */
 int main(void){
     
-
     while(1){
         signed char frames[12];        //Declaração do vetor de frames, de tamanho máximo 12.
         int cont_faltas_4;     /* Variável que guardará a quantidade de faltas de página
                                 ocorridas com 4 frames disponíveis. */
+        int cont_faltas_8;     /* Variável que guardará a quantidade de faltas de página
+                                ocorridas com 8 frames disponíveis. */
+        int cont_faltas_12;    /* Variável que guardará a quantidade de faltas de página
+                                ocorridas com 12 frames disponíveis. */
 
         cont_faltas_4 = lru(frames, 4, 3000, referencias);  /* Chamada da função de simulação
                                                         com parâmetro "num_frames" igual a 4, 
                                                         armazenando seu resultado na variável
                                                         "cont_faltas_4". */
         
+        cont_faltas_8 = lru(frames, 8, 3000, referencias);  /* Chamada da função de simulação
+                                                        com parâmetro "num_frames" igual a 8, 
+                                                        armazenando seu resultado na variável
+                                                        "cont_faltas_8". */
         
-         
+        cont_faltas_12 = lru(frames, 12, 3000, referencias); /* Chamada da função de simulação
+                                                        com parâmetro "num_frames" igual a 12, 
+                                                        armazenando seu resultado na variável
+                                                        "cont_faltas_12". */
     }
     
 
